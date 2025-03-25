@@ -12,11 +12,6 @@ inputs:
     required: true
     description: Matrix as a multiline string, same format as a normal matrix definition.
 
-outputs:
-  matrix:
-    description: A matrix suitable for extending matrix size workaround.
-    value: ${{ steps.extend-matrix.outputs.output }}
-
 runs:
   using: composite
 
@@ -29,10 +24,11 @@ runs:
     - id: extend-matrix
       shell: bash
       run: |
-        matrix=$( echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -f ${{ github.action_path }}/extend-matrix.jq )
-        echo "matrix=$matrix" | tee -a "$GITHUB_OUTPUT" "$GITHUB_ENV"
+        echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -c -f ${{ github.action_path }}/extend-matrix.jq > ${{ github.action_path }}/matrix-${{ inputs.artifact-id }}.json
 
     - id: upload-artifact
       uses: actions/upload-artifact@v4
       with:
         name: matrix-${{ inputs.artifact-id }}
+        path: ${{ github.action_path }}/matrix-${{ inputs.artifact-id }}.json
+        overwrite: true
