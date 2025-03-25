@@ -4,6 +4,10 @@ description: |
   Suitable for a two-level nesting.
 
 inputs:
+  artifact-id:
+    required: true
+    description: Identifier to use for uploading a matrix artifact.
+
   matrix:
     required: true
     description: Matrix as a multiline string, same format as a normal matrix definition.
@@ -26,4 +30,9 @@ runs:
       shell: bash
       run: |
         matrix=$( echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -f ${{ github.action_path }}/extend-matrix.jq )
-        echo "matrix=$matrix" | tee -a "$GITHUB_OUTPUT"
+        echo "matrix=$matrix" | tee -a "$GITHUB_OUTPUT" "$GITHUB_ENV"
+
+    - id: upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: matrix-${{ inputs.artifact-id }}
