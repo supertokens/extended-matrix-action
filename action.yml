@@ -1,0 +1,27 @@
+name: Extended matrix
+description: |
+  Extend run matrixes above Github's 256 limit.
+  Suitable for a two-level nesting.
+
+inputs:
+  matrix:
+    required: true
+    description: Matrix as a multiline string, same format as a normal matrix definition.
+
+outputs:
+  matrix:
+    description: A matrix suitable for extending matrix size workaround.
+    value: ${{ steps.extend-matrix.outputs.output }}
+
+runs:
+  using: composite
+
+  steps:
+    - id: setup-matrix
+      uses: druzsan/setup-matrix@v2
+      with:
+        matrix: ${{ inputs.matrix }}
+
+    - id: extend-matrix
+      shell: bash
+      run: echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -f ./extend-matrix.jq
