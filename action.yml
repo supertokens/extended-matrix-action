@@ -24,4 +24,4 @@ runs:
 
     - id: extend-matrix
       shell: bash
-      run: echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -f ./extend-matrix.jq
+      run: echo '${{ steps.setup-matrix.outputs.matrix }}' | jq -f ${{ github.action_path }}/extend-matrix.jq
