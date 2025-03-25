@@ -11,7 +11,7 @@ def nwise($n):
 
 # Get the keys present in matrix
 # These are useful after getting combinations as an array
-keys as $matrixKeys # ["version", "framework"]
+[to_entries[] | .key] as $matrixKeys # ["version", "framework"]
 | [ # Convert the stream of objects into an array
     # Convert the stream of objects into an array
     [
